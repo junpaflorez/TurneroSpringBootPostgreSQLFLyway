@@ -34,6 +34,17 @@ public class AsesorControllerTest {
     }
     
     @Test
+    public void crearAsesor_AsesorCreatedEmpty(){
+        AsesorDTO asesorDTO = crearAsesorDTO();
+        
+        when(asesorService.crearAsesor(asesorDTO.getIdentificacion(), asesorDTO.getNombre())).thenReturn(null);
+                
+        ResponseEntity<?> result = asesorController.crearAsesor(asesorDTO);
+        
+        assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());        
+    }
+    
+    @Test
     public void crearAsesor_AsesorCreated(){
         AsesorDTO asesorDTO = crearAsesorDTO();
         

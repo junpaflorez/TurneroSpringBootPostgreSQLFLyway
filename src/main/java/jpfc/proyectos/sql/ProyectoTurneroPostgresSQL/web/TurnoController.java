@@ -34,7 +34,7 @@ public class TurnoController {
     
     
     @PostMapping("/crearTurno")
-    ResponseEntity<?> crearTurno(@RequestParam("categoria") String categoria){
+    public ResponseEntity<?> crearTurno(@RequestParam("categoria") String categoria){
         TurnoDTO turnoDTO = new TurnoDTO();
         if(funcionesService.esValido(categoria)){
             turnoDTO = turnoService.crearTurno(categoria);

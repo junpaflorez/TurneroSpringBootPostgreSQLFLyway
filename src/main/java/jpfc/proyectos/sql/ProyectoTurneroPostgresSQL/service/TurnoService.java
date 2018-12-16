@@ -17,4 +17,12 @@ public interface TurnoService {
     TurnoDTO crearTurno(String categoria);
     
     List<TurnoDTO> listaTurno();
+    
+    TurnoDTO consultarTurno(int id);
+    
+    TurnoDTO cambiarEstadoLlamadoTurno(int id);
+    
+    TurnoDTO cambiarEstadoAtendidoTurno(int id);
+    
+    List<TurnoDTO> turnosPendientes();
 }

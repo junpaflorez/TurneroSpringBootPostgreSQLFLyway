@@ -5,11 +5,13 @@
  */
 package jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.web;
 
+import java.util.List;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.dto.TurnoDTO;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service.FuncionesService;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service.TurnoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,5 +43,25 @@ public class TurnoController {
             }
         }
         return ResponseEntity.badRequest().build();
+    }
+    
+    @GetMapping("/todosLosTurnos")
+    public ResponseEntity<?> todosLosTurnos(){
+        
+        List<TurnoDTO> turnos = turnoService.listaTurno();
+
+        if(turnos != null){
+            return ResponseEntity.ok(turnos);
+        } 
+        return ResponseEntity.notFound().build();
+    }
+    
+    @GetMapping("/pendientes")
+    public ResponseEntity<?> pendientes(){
+        List<TurnoDTO> turnos = turnoService.turnosPendientes();
+        if(turnos != null){
+            return ResponseEntity.ok(turnos);
+        }
+        return ResponseEntity.notFound().build();
     }
 }

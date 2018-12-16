@@ -5,6 +5,7 @@
  */
 package jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.repository;
 
+import java.util.List;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.entity.Turno;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,5 +20,9 @@ import org.springframework.stereotype.Repository;
 public interface TurnoRepository extends JpaRepository<Turno, Integer> {
     
     @Query(value="SELECT COUNT(*) FROM turno WHERE categoria = :categoria", nativeQuery = true)
-    public int findByCategoria(@Param("categoria") String categoria);
+    int findByCategoria(@Param("categoria") String categoria);
+    
+    @Query(value="select * from turno where llamado = true and atendido = false order by secuencia", nativeQuery = true)
+    List<Turno> turnosPorLLamar();
+  
 }

@@ -15,7 +15,7 @@ CREATE TABLE Turno (
 
 CREATE TABLE Atendido (
     id BIGSERIAL NOT NULL PRIMARY KEY,
-    fkTurno BIGINT NOT NULL,
+    fkTurno BIGINT NOT NULL UNIQUE,
     fkAsesor VARCHAR(5) NOT NULL,
     horaInicio TIME NOT NULL,
     horaFinal TIME NOT NULL,

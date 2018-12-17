@@ -38,7 +38,7 @@ public class TurnoController {
         TurnoDTO turnoDTO = new TurnoDTO();
         if(funcionesService.esValido(categoria)){
             turnoDTO = turnoService.crearTurno(categoria);
-            if(turnoDTO!=null){
+            if(turnoDTO != null){
                 return ResponseEntity.ok(turnoDTO);
             }
         }

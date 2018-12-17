@@ -89,6 +89,30 @@ public class TurnoControllerTest {
        
         assertEquals(HttpStatus.OK, result.getStatusCode()); 
     }
+    
+    @Test
+    public void pendientes_ListaPendientesNotEmpty(){
+        
+        List<TurnoDTO> listaTurnosDTO = crearListaTurnoDTO();
+               
+        when(turnoService.turnosPendientes()).thenReturn(listaTurnosDTO);
+       
+        ResponseEntity<?> result = turnoController.pendientes();
+       
+        assertEquals(HttpStatus.OK, result.getStatusCode()); 
+    }
+    
+    @Test
+    public void pendientes_ListaPendientesEmpty(){
+        
+        List<TurnoDTO> listaTurnosDTO = null;
+               
+        when(turnoService.turnosPendientes()).thenReturn(listaTurnosDTO);
+       
+        ResponseEntity<?> result = turnoController.pendientes();
+       
+        assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode()); 
+    }
    
     public List<TurnoDTO> crearListaTurnoDTO(){
         List<TurnoDTO> listaTurnosDTO = new ArrayList();

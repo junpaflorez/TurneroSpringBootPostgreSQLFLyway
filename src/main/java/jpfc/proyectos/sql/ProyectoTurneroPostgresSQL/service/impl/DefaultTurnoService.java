@@ -5,6 +5,7 @@
  */
 package jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service.impl;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -123,5 +124,35 @@ public class DefaultTurnoService implements TurnoService{
         }
         return null;
     }
+
+    @Override
+    public List<TurnoDTO> turnosParaEncolar() {
+        List<Turno> prioritario = new ArrayList<>();
+        List<Turno> secundario = new ArrayList<>();
+        Turno terciario = null;
+        List<Turno> turnos = new ArrayList<>();
+        List<TurnoDTO> turnosDTO = new ArrayList<>();
+        prioritario = turnoRepository.nivelPrioritario();
+        secundario = turnoRepository.nivelSecundario();
+        terciario = turnoRepository.nivelTerciario();
+        
+        if(!prioritario.isEmpty()){
+            turnos.addAll(prioritario);
+        }
+        if(!secundario.isEmpty()){
+            turnos.addAll(secundario);
+        }
+        if(terciario != null){
+            turnos.add(terciario);
+        }
+        if(!turnos.isEmpty()){
+            for(Turno turno:turnos){
+                turnosDTO.add(modelMapper.map(turno, TurnoDTO.class));
+            }
+            return turnosDTO;
+        }
+        return null;
+    }
+
     
 }

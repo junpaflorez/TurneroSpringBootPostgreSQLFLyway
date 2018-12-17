@@ -97,5 +97,19 @@ public class DefaultAdminTurnosService implements AdminTurnosService{
         }
         return promedioAsesor;
     }
-    
+
+    @Override
+    public AtendidoDTO asignarAsesor(int turno, String asesor) {
+        Optional<Atendido> consulta = null;
+        consulta = atendidoRepository.findByFkTurno(turno);
+        Atendido turnoAtendido = new Atendido();
+        if(consulta.isPresent()){
+            turnoAtendido = consulta.get();
+            turnoAtendido.setFkasesor(asesor);
+            turnoAtendido = atendidoRepository.save(turnoAtendido);
+            return modelMapper.map(turnoAtendido, AtendidoDTO.class);
+        }
+        return null;
+    }
+   
 }

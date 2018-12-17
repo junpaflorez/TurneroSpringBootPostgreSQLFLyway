@@ -6,10 +6,14 @@
 package jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.web;
 
 import java.sql.Time;
+import java.util.List;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.dto.AsesorDTO;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.dto.AtendidoDTO;
+import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.dto.ColaDTO;
+import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.dto.TurnoDTO;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service.AdminTurnosService;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service.AsesorService;
+import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service.ColaService;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service.FuncionesService;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service.TurnoService;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +35,7 @@ public class AdminTurnosController {
     private FuncionesService funcionesService;
     private TurnoService turnoService;
     private AdminTurnosService adminTurnosService;
+    private ColaService colaService;
 
     public AdminTurnosController(AsesorService asesorService, FuncionesService funcionesService, TurnoService turnoService, AdminTurnosService adminTurnosService) {
         this.asesorService = asesorService;
@@ -72,4 +77,45 @@ public class AdminTurnosController {
         return ResponseEntity.badRequest().build();
     }
     
+    
+    @GetMapping("/pendientes")
+    public ResponseEntity<?> pendientes(){
+        List<TurnoDTO> turnos = turnoService.turnosPendientes();
+        if(turnos != null){
+            return ResponseEntity.ok(turnos);
+        }
+        return ResponseEntity.notFound().build();
+    }
+    
+    @GetMapping("/pedirTurno")
+    public ResponseEntity<?> pedirTurno(@RequestBody AsesorDTO asesor){
+        TurnoDTO turno = null;
+        ColaDTO siguiente = null;
+        AtendidoDTO turnoAtendido = null;
+        int secuencia = 0;
+        AsesorDTO asesorIdentificado = new AsesorDTO();
+        if(asesor == null){
+            return ResponseEntity.badRequest().build();
+        }
+        asesorIdentificado = asesorService.consultarAsesor(asesor);
+        if(asesorIdentificado != null){
+            siguiente = colaService.siguiente();
+            if(siguiente == null){
+                colaService.listaCola();
+                siguiente = colaService.siguiente();
+            }
+            if(siguiente!=null){
+                secuencia = siguiente.getTurno();
+                turno = turnoService.consultarTurno(secuencia);
+                if(turno != null){
+                    turnoAtendido = adminTurnosService.asignarAsesor(turno.getId(), asesor.getIdentificacion());
+                    if(turnoAtendido!=null){
+                        turno = turnoService.cambiarEstadoLlamadoTurno(secuencia);
+                        return ResponseEntity.ok(turno);
+                    }
+                }
+            }
+        }
+        return ResponseEntity.notFound().build();
+    }
 }

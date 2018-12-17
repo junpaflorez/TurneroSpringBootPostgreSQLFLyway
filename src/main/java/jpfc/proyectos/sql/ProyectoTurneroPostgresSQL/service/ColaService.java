@@ -14,7 +14,7 @@ import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.dto.TurnoDTO;
  *
  * @author junpa
  */
-public interface ColaTurnosService {
+public interface ColaService {
     
     List<ColaDTO> listaCola();
     
@@ -22,13 +22,15 @@ public interface ColaTurnosService {
     
     ColaDTO siguiente();
     
-    boolean guardarTurnoEnCola(TurnoDTO turno);
+    ColaDTO guardarTurnoEnCola(TurnoDTO turno);
     
     boolean asignarAsesorTurno(ColaDTO turno, AsesorDTO asesor);
     
-    ColaDTO consultarTurnoEnCola(String secuencia); 
+    ColaDTO consultarTurnoEnCola(int fkTurno); 
     
-    boolean TurnoLibreEnCola(String fkTurno);
+    boolean turnoLibreEnCola(int fkTurno);
+    
+    List<ColaDTO> crearCola();
 
     
 }

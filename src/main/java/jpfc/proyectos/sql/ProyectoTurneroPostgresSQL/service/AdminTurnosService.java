@@ -20,5 +20,6 @@ public interface AdminTurnosService {
     
     Time promedioTiemposAsesor(String fkAsesor);
    
+    AtendidoDTO asignarAsesor(int turno,String asesor);
     
 }

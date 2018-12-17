@@ -27,6 +27,6 @@ public interface ColaRepository extends JpaRepository<Cola, Integer>{
     Optional<Cola> siguiente();
     
     @Query(value = "Select * from cola where turno = :fkTurno", nativeQuery = true)
-    Optional<Cola> findByTurno(@Param("fkTurno") String fkTurno);
+    Optional<Cola> findByTurno(@Param("fkTurno") int fkTurno);
 
 }

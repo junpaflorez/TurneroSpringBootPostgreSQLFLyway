@@ -13,18 +13,20 @@ import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.dto.ColaDTO;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.dto.TurnoDTO;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.entity.Cola;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.repository.ColaRepository;
-import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service.ColaTurnosService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service.ColaService;
+import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service.TurnoService;
 
 /**
  *
  * @author junpa
  */
 @Service
-public class DefaultColaTurnos implements ColaTurnosService {
+public class DefaultColaTurnos implements ColaService {
     private ColaRepository colaRepository;
     private ModelMapper modelMapper;
+    private TurnoService turnoService;
 
     public DefaultColaTurnos(ColaRepository colaRepository, ModelMapper modelMapper) {
         this.colaRepository = colaRepository;
@@ -77,19 +79,17 @@ public class DefaultColaTurnos implements ColaTurnosService {
     }
 
     @Override
-    public boolean guardarTurnoEnCola(TurnoDTO turno) {
-        int id = turno.getId();
-        String fkAsesor = "";
-        long cuantos = colaRepository.count() + 1;
-        String secuencia = Long.toString(cuantos);
-        Cola cola = new Cola();
-        cola.setAsesor(fkAsesor);
-        cola.setTurno(id);
-        cola = colaRepository.save(cola);
-        if(cola.getId() == id){
-            return true;
+    public ColaDTO guardarTurnoEnCola(TurnoDTO turno) {
+        if(turno!=null){
+            int id = turno.getId();
+            Cola cola = new Cola();
+            cola.setTurno(id);
+            cola = colaRepository.save(cola);
+            if(cola.getId() == id){
+                return modelMapper.map(cola,ColaDTO.class);
+            }
         }
-        return false;
+        return null;
     }
 
     @Override
@@ -107,10 +107,10 @@ public class DefaultColaTurnos implements ColaTurnosService {
     }
 
     @Override
-    public ColaDTO consultarTurnoEnCola(String secuencia) {
+    public ColaDTO consultarTurnoEnCola(int fkturno) {
         Optional<Cola> turno = null;
         Cola auxiliar = null;
-        turno = colaRepository.findByTurno(secuencia);
+        turno = colaRepository.findByTurno(fkturno);
         if(turno.isPresent()){
             auxiliar = turno.get();
             return modelMapper.map(auxiliar, ColaDTO.class);
@@ -119,7 +119,7 @@ public class DefaultColaTurnos implements ColaTurnosService {
     }
 
     @Override
-    public boolean TurnoLibreEnCola(String fkTurno) {
+    public boolean turnoLibreEnCola(int fkTurno) {
         Optional<Cola> turno = null;
         turno = colaRepository.findByTurno(fkTurno);
         if(turno.isPresent()){
@@ -128,6 +128,32 @@ public class DefaultColaTurnos implements ColaTurnosService {
         return false;
     }
 
-    
+    @Override
+    public List<ColaDTO> crearCola() {
+        List<TurnoDTO> turnos=new ArrayList<>();
+        turnos = turnoService.turnosParaEncolar();
+        List<TurnoDTO> turnosCola = new ArrayList<>();
+        ColaDTO cola = new ColaDTO();
+        List<ColaDTO> listaCola = new ArrayList<>();
+        int id = 0;
+        if(turnos.isEmpty()){
+            for(TurnoDTO turno:turnos){
+                id = turno.getId();
+                if(!turnoLibreEnCola(id)){
+                    turnosCola.add(modelMapper.map(turno, TurnoDTO.class));
+                }
+            }
+        }
+        if(!turnosCola.isEmpty()){
+            for(TurnoDTO turno:turnosCola){
+                cola = guardarTurnoEnCola(turno);
+                if(cola!=null){
+                    listaCola.add(cola);
+                }
+            }
+            return listaCola;
+        }
+        return null;
+    }
     
 }

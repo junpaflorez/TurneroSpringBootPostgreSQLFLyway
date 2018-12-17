@@ -25,4 +25,7 @@ public interface TurnoService {
     TurnoDTO cambiarEstadoAtendidoTurno(int id);
     
     List<TurnoDTO> turnosPendientes();
+    
+    List<TurnoDTO> turnosParaEncolar();
+   
 }

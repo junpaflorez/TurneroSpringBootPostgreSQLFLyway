@@ -19,7 +19,6 @@ public interface AdminTurnosService {
     AtendidoDTO consultarTurnoAtendido(int id);
     
     Time promedioTiemposAsesor(String fkAsesor);
-    
-    Time promedioTiempoEsperaCategoria(String categoria);
+   
     
 }

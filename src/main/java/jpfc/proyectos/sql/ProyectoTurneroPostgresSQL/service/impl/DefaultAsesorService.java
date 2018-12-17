@@ -51,12 +51,20 @@ public class DefaultAsesorService implements AsesorService{
     }
 
     @Override
-    public AsesorDTO consultarAsesor(String identificacion) {
+    public AsesorDTO consultarAsesor(AsesorDTO asesorDTO) {
         Optional<Asesor> asesor = null;
-        if(funcionesService.esValido(identificacion)){
+        String identificacion = asesorDTO.getIdentificacion();
+        Asesor auxiliar = new Asesor();
+        String nombre = asesorDTO.getNombre();
+        System.out.println("AsesorDTO: {"+asesorDTO.getIdentificacion()+","+asesorDTO.getNombre()+"}");
+        if(funcionesService.esValido(identificacion)&&funcionesService.esValido(nombre)){
             asesor = asesorRepository.findById(identificacion);
             if(asesor.isPresent()){
-                return modelMapper.map(asesor.get(), AsesorDTO.class);
+                auxiliar = asesor.get();
+                System.out.println("Auxiliar: {"+auxiliar.getIdentificacion()+","+auxiliar.getNombre()+"}");
+                if(auxiliar.getNombre().matches(nombre)){
+                    return modelMapper.map(asesor.get(), AsesorDTO.class);
+                }
             }
         }
         return null;

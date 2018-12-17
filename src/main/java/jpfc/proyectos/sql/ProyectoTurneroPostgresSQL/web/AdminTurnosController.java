@@ -5,15 +5,16 @@
  */
 package jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.web;
 
+import java.sql.Time;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.dto.AsesorDTO;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.dto.AtendidoDTO;
-import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.dto.TurnoDTO;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service.AdminTurnosService;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service.AsesorService;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service.FuncionesService;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service.TurnoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,12 +46,39 @@ public class AdminTurnosController {
         if(funcionesService.esValido(turno) && asesor!=null){
             int fkTurno = Integer.parseInt(turno);
             String fkAsesor = asesor.getIdentificacion();
-            consultarAsesor = asesorService.consultarAsesor(fkAsesor);
+            consultarAsesor = asesorService.consultarAsesor(asesor);
             if(consultarAsesor!= null){
                 atendidoDTO = adminTurnosService.crearTurnoAtendido(fkAsesor,fkTurno);
                 if(atendidoDTO!=null){
                     return ResponseEntity.ok(atendidoDTO);
                 }
+            }
+        }
+        return ResponseEntity.badRequest().build();
+    }
+    
+    @GetMapping("/consultarTurno")
+    public ResponseEntity<?> consultarTurno(@RequestParam("turno") String turno){
+        AtendidoDTO atendidoDTO = new AtendidoDTO();
+        if(funcionesService.esValido(turno)){
+            int fkTurno = Integer.parseInt(turno);
+            atendidoDTO = adminTurnosService.consultarTurnoAtendido(fkTurno);
+            if(atendidoDTO!=null)
+                return ResponseEntity.ok(atendidoDTO);
+        }
+        return ResponseEntity.badRequest().build();
+    }
+    
+    @GetMapping("/promedioAsesor")
+    public ResponseEntity<?> promedioAsesor(@RequestBody AsesorDTO asesor){
+        Time tiempoPromedio = new Time(0);
+        AsesorDTO asesorDTO = new AsesorDTO();
+        if(asesor!=null){
+            String idAsesor = asesor.getIdentificacion();
+            asesorDTO = asesorService.consultarAsesor(asesor);
+            if(asesorDTO!=null){
+                tiempoPromedio = adminTurnosService.promedioTiemposAsesor(idAsesor);
+                return ResponseEntity.ok(tiempoPromedio);
             }
         }
         return ResponseEntity.badRequest().build();

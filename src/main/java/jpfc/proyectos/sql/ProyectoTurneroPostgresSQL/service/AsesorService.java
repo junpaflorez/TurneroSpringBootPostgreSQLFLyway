@@ -15,6 +15,6 @@ public interface AsesorService {
     
     AsesorDTO crearAsesor(String identificacion, String Nombre);
     
-    AsesorDTO consultarAsesor(String identificacion);
+    AsesorDTO consultarAsesor(AsesorDTO asesorDTO);
     
 }

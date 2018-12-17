@@ -5,6 +5,7 @@
  */
 package jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.repository;
 
+import java.util.List;
 import java.util.Optional;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.entity.Atendido;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,4 +22,8 @@ public interface AtendidoRepository extends JpaRepository<Atendido, Integer> {
     
     @Query(value="select * from atendido where fkTurno = :turno",nativeQuery = true)
     public Optional<Atendido> findByFkTurno(@Param("turno") int fkTurno);
+    
+    @Query(value="select * from atendido where fkAsesor = :asesor", nativeQuery = true)
+    public List<Atendido> buscarPorAsesor(@Param("asesor")String fkAsesor);
+    
 }

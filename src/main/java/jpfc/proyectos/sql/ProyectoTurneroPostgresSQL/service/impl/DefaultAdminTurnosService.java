@@ -6,10 +6,13 @@
 package jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service.impl;
 
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.dto.AtendidoDTO;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.entity.Atendido;
-import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.entity.Turno;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.repository.AtendidoRepository;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service.AdminTurnosService;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service.AsesorService;
@@ -56,17 +59,43 @@ public class DefaultAdminTurnosService implements AdminTurnosService{
 
     @Override
     public AtendidoDTO consultarTurnoAtendido(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Atendido turno = new Atendido();
+        Optional<Atendido> auxiliar = null;
+        if(id>0){
+            auxiliar = atendidoRepository.findById(id);
+            if(auxiliar.isPresent()){
+                turno = auxiliar.get();
+                return modelMapper.map(turno, AtendidoDTO.class);
+            }
+        }
+        return null;
     }
 
     @Override
     public Time promedioTiemposAsesor(String fkAsesor) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Time promedioTiempoEsperaCategoria(String categoria) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Atendido> turnos = new ArrayList<>();
+        Calendar tiempoTotal = Calendar.getInstance();
+        long promedio = 0;
+        Time promedioAsesor = new Time(0);
+        Calendar tiempo = Calendar.getInstance();
+        tiempoTotal.setTime(promedioAsesor);
+        long minutosLong = 0;
+        int minutos = 0;
+        int contador = 0;
+        if(funcionesService.esValido(fkAsesor)){
+            turnos = atendidoRepository.buscarPorAsesor(fkAsesor);
+            for(Atendido turno:turnos){
+                tiempo.setTime(turno.getPromedioatendido());
+                minutosLong = tiempo.getTime().getTime();
+                minutos = (int)(long) minutosLong;
+                tiempoTotal.add(Calendar.MINUTE, minutos );
+                contador ++;
+            }
+            promedio = (tiempoTotal.getTime().getTime())/contador;
+            promedioAsesor.setTime(promedio);
+            return promedioAsesor;
+        }
+        return promedioAsesor;
     }
     
 }

@@ -6,6 +6,7 @@
 package jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.web;
 
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -96,31 +97,28 @@ public class AdminTurnosController {
     public ResponseEntity<?> pedirTurno(@RequestBody AsesorDTO asesor){
         TurnoDTO turno = null;
         ColaDTO siguiente = new ColaDTO();
-        AtendidoDTO turnoAtendido = null;
+        ColaDTO turnoAtendido = new ColaDTO();
+        List<ColaDTO> turnoCola = new ArrayList<>();
         int secuencia = 0;
         AsesorDTO asesorIdentificado = new AsesorDTO();
         if(asesor == null){
             return ResponseEntity.badRequest().build();
         }
-        System.out.println("existe un asesor");
         asesorIdentificado = asesorService.consultarAsesor(asesor);
         if(asesorIdentificado != null){
-            System.out.println("lo consulte y existe el asesor");
             siguiente = colaService.siguiente();
             if(siguiente == null){
-                System.out.println("no existe una lista de turnos asi que la creare");
-                colaService.crearCola();
-                siguiente = colaService.siguiente();
+                turnoCola = colaService.crearCola();
+                if(!turnoCola.isEmpty()){
+                    siguiente = colaService.siguiente();
+                }
             }
             if(siguiente!=null){
-                System.out.println("Tenemos un turno para trabajar");
                 secuencia = siguiente.getTurno();
                 turno = turnoService.consultarTurno(secuencia);
                 if(turno != null){
-                    System.out.println("compruebo mi turno para asignarlo a un asesor");
-                    turnoAtendido = adminTurnosService.asignarAsesor(turno.getId(), asesor.getIdentificacion());
+                    turnoAtendido = colaService.asignarAsesorTurno(turno.getId(), asesor);
                     if(turnoAtendido!=null){
-                        System.out.println("esta asignado y listo para ser atendido");
                         turno = turnoService.cambiarEstadoLlamadoTurno(secuencia);
                         return ResponseEntity.ok(turno);
                     }

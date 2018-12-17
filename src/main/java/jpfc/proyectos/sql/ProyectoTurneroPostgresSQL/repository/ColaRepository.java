@@ -23,7 +23,7 @@ public interface ColaRepository extends JpaRepository<Cola, Integer>{
     @Query(value = "Select * from cola ", nativeQuery = true)
     List<Cola> buscarPendientes(); 
     
-    @Query(value = "Select * from cola where asesor = '' order by id limit 1", nativeQuery = true)
+    @Query(value = "Select * from cola where asesor is null order by id limit 1", nativeQuery = true)
     Optional<Cola> siguiente();
     
     @Query(value = "Select * from cola where turno = :fkTurno", nativeQuery = true)

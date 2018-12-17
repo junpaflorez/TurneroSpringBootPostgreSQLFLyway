@@ -25,12 +25,12 @@ public interface TurnoRepository extends JpaRepository<Turno, Integer> {
     @Query(value="select * from turno where llamado = true and atendido = false order by secuencia", nativeQuery = true)
     List<Turno> turnosPorLLamar();
     
-    @Query(value = "select * from turno where categoria = 'A' and llamado = false and atendido = false order by secuencia limit 3", nativeQuery = true)
+    @Query(value = "select * from turno where categoria = 'a' and llamado = false and atendido = false order by secuencia limit 3", nativeQuery = true)
     List<Turno> nivelPrioritario();
     
-    @Query(value = "select * from turno where categoria = 'B' and llamado = false and atendido = false order by secuencia limit 2", nativeQuery = true)
+    @Query(value = "select * from turno where categoria = 'b' and llamado = false and atendido = false order by secuencia limit 2", nativeQuery = true)
     List<Turno> nivelSecundario();
     
-    @Query(value = "select * from turno where categoria = 'C' and llamado = false and atendido = false order by secuencia limit 1", nativeQuery = true)
+    @Query(value = "select * from turno where categoria = 'c' and llamado = false and atendido = false order by secuencia limit 1", nativeQuery = true)
     Turno nivelTerciario();
 }

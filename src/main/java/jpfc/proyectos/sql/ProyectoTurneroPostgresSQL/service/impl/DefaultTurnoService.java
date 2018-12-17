@@ -135,7 +135,6 @@ public class DefaultTurnoService implements TurnoService{
         prioritario = turnoRepository.nivelPrioritario();
         secundario = turnoRepository.nivelSecundario();
         terciario = turnoRepository.nivelTerciario();
-        
         if(!prioritario.isEmpty()){
             turnos.addAll(prioritario);
         }

@@ -103,13 +103,18 @@ public class DefaultAdminTurnosService implements AdminTurnosService{
 
     @Override
     public AtendidoDTO asignarAsesor(int turno, String asesor) {
+        System.out.println("voy a asignar el asesor");
         Optional<Atendido> consulta = null;
         consulta = atendidoRepository.findByFkTurno(turno);
+        System.out.println("encontre el turno correspondiente el turno: " + turno);
+        System.out.println("busque el turno: " + consulta.get().getFkturno());
         Atendido turnoAtendido = new Atendido();
         if(consulta.isPresent()){
             turnoAtendido = consulta.get();
+            System.out.println("el turno es: " + turnoAtendido.getFkturno());
             turnoAtendido.setFkasesor(asesor);
             turnoAtendido = atendidoRepository.save(turnoAtendido);
+            System.out.println("ya guarde");
             return modelMapper.map(turnoAtendido, AtendidoDTO.class);
         }
         return null;

@@ -24,7 +24,7 @@ public interface ColaService {
     
     ColaDTO guardarTurnoEnCola(TurnoDTO turno);
     
-    boolean asignarAsesorTurno(ColaDTO turno, AsesorDTO asesor);
+    ColaDTO asignarAsesorTurno(int turno, AsesorDTO asesor);
     
     ColaDTO consultarTurnoEnCola(int fkTurno); 
     

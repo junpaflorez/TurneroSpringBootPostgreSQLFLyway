@@ -96,17 +96,18 @@ public class DefaultColaTurnos implements ColaService {
     }
 
     @Override
-    public boolean asignarAsesorTurno(ColaDTO turno, AsesorDTO asesor) {
-        Cola cola = null;
+    public ColaDTO asignarAsesorTurno(int turno, AsesorDTO asesor) {
+        Optional<Cola> cola = null;
         Cola auxiliar = null;
         String fkAsesor = asesor.getIdentificacion();
-        cola = modelMapper.map(turno, Cola.class);
-        cola.setAsesor(fkAsesor);
-        auxiliar = colaRepository.save(cola);
+        cola = colaRepository.findByTurno(turno);
+        auxiliar = cola.get();
+        auxiliar.setAsesor(fkAsesor);
+        auxiliar = colaRepository.save(auxiliar);
         if(auxiliar.getAsesor() == asesor.getIdentificacion()){
-            return true;
+            return modelMapper.map(auxiliar, ColaDTO.class);
         }
-        return false;
+        return null;
     }
 
     @Override
@@ -133,17 +134,13 @@ public class DefaultColaTurnos implements ColaService {
 
     @Override
     public List<ColaDTO> crearCola() {
-        System.out.println("voy a crear la cola");
         List<TurnoDTO> turnos = new ArrayList<>();
         turnos = turnoService.turnosParaEncolar();
-        System.out.println("ya tengo los turnos para encolar");
         List<TurnoDTO> turnosCola = new ArrayList<>();
         ColaDTO cola = new ColaDTO();
-        System.out.println("turno 1:" + turnos.get(0).getSecuencia());
         List<ColaDTO> listaCola = new ArrayList<>();
         int id = 0;
         if(!turnos.isEmpty()){
-            System.out.println("voy a empezar a llenar la cola de turnos");
             for(TurnoDTO turno:turnos){
                 id = turno.getId();
                 if(!turnoLibreEnCola(id)){
@@ -152,7 +149,6 @@ public class DefaultColaTurnos implements ColaService {
             }
         }
         if(!turnosCola.isEmpty()){
-            System.out.println("esta es la cola para mandar");
             for(TurnoDTO turno:turnosCola){
                 cola = guardarTurnoEnCola(turno);
                 if(cola!=null){

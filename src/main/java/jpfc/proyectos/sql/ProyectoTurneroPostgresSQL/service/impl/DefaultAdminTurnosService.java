@@ -8,8 +8,8 @@ package jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service.impl;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.dto.AtendidoDTO;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.entity.Atendido;
@@ -74,9 +74,9 @@ public class DefaultAdminTurnosService implements AdminTurnosService{
     @Override
     public Time promedioTiemposAsesor(String fkAsesor) {
         List<Atendido> turnos = new ArrayList<>();
-        Calendar tiempoTotal = Calendar.getInstance();
+        Calendar tiempoTotal = funcionesService.iniciarReloj();
         long promedio = 0;
-        Time promedioAsesor = new Time(0);
+        Time promedioAsesor = new Time(tiempoTotal.getTimeInMillis());
         Calendar tiempo = Calendar.getInstance();
         tiempoTotal.setTime(promedioAsesor);
         long minutosLong = 0;
@@ -91,9 +91,12 @@ public class DefaultAdminTurnosService implements AdminTurnosService{
                 tiempoTotal.add(Calendar.MINUTE, minutos );
                 contador ++;
             }
-            promedio = (tiempoTotal.getTime().getTime())/contador;
-            promedioAsesor.setTime(promedio);
-            return promedioAsesor;
+            if(promedio > 0){
+                promedio = (tiempoTotal.getTime().getTime())/contador;
+            
+                promedioAsesor.setTime(promedio);
+                return promedioAsesor;
+            }
         }
         return promedioAsesor;
     }

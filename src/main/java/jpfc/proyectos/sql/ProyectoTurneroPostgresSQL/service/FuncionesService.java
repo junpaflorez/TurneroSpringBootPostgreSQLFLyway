@@ -5,6 +5,8 @@
  */
 package jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service;
 
+import java.util.Calendar;
+
 /**
  *
  * @author junpa
@@ -12,4 +14,6 @@ package jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service;
 public interface FuncionesService {
     
     boolean esValido(String identificacion);
+    
+    Calendar iniciarReloj();
 }

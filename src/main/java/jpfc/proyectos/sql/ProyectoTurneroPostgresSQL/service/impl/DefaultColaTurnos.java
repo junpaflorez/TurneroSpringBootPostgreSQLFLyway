@@ -28,10 +28,13 @@ public class DefaultColaTurnos implements ColaService {
     private ModelMapper modelMapper;
     private TurnoService turnoService;
 
-    public DefaultColaTurnos(ColaRepository colaRepository, ModelMapper modelMapper) {
+    public DefaultColaTurnos(ColaRepository colaRepository, ModelMapper modelMapper, TurnoService turnoService) {
         this.colaRepository = colaRepository;
         this.modelMapper = modelMapper;
+        this.turnoService = turnoService;
     }
+
+    
     
     @Override
     public List<ColaDTO> listaCola() {
@@ -130,13 +133,17 @@ public class DefaultColaTurnos implements ColaService {
 
     @Override
     public List<ColaDTO> crearCola() {
-        List<TurnoDTO> turnos=new ArrayList<>();
+        System.out.println("voy a crear la cola");
+        List<TurnoDTO> turnos = new ArrayList<>();
         turnos = turnoService.turnosParaEncolar();
+        System.out.println("ya tengo los turnos para encolar");
         List<TurnoDTO> turnosCola = new ArrayList<>();
         ColaDTO cola = new ColaDTO();
+        System.out.println("turno 1:" + turnos.get(0).getSecuencia());
         List<ColaDTO> listaCola = new ArrayList<>();
         int id = 0;
-        if(turnos.isEmpty()){
+        if(!turnos.isEmpty()){
+            System.out.println("voy a empezar a llenar la cola de turnos");
             for(TurnoDTO turno:turnos){
                 id = turno.getId();
                 if(!turnoLibreEnCola(id)){
@@ -145,6 +152,7 @@ public class DefaultColaTurnos implements ColaService {
             }
         }
         if(!turnosCola.isEmpty()){
+            System.out.println("esta es la cola para mandar");
             for(TurnoDTO turno:turnosCola){
                 cola = guardarTurnoEnCola(turno);
                 if(cola!=null){

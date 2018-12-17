@@ -6,7 +6,9 @@
 package jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.web;
 
 import java.sql.Time;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.dto.AsesorDTO;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.dto.AtendidoDTO;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.dto.ColaDTO;
@@ -37,12 +39,15 @@ public class AdminTurnosController {
     private AdminTurnosService adminTurnosService;
     private ColaService colaService;
 
-    public AdminTurnosController(AsesorService asesorService, FuncionesService funcionesService, TurnoService turnoService, AdminTurnosService adminTurnosService) {
+    public AdminTurnosController(AsesorService asesorService, FuncionesService funcionesService, TurnoService turnoService, AdminTurnosService adminTurnosService, ColaService colaService) {
         this.asesorService = asesorService;
         this.funcionesService = funcionesService;
         this.turnoService = turnoService;
         this.adminTurnosService = adminTurnosService;
+        this.colaService = colaService;
     }
+
+
     
     @PostMapping("/crearTurno")
     public ResponseEntity<?> crearTurno(@RequestParam("turno") String turno, @RequestBody AsesorDTO asesor){
@@ -90,26 +95,32 @@ public class AdminTurnosController {
     @GetMapping("/pedirTurno")
     public ResponseEntity<?> pedirTurno(@RequestBody AsesorDTO asesor){
         TurnoDTO turno = null;
-        ColaDTO siguiente = null;
+        ColaDTO siguiente = new ColaDTO();
         AtendidoDTO turnoAtendido = null;
         int secuencia = 0;
         AsesorDTO asesorIdentificado = new AsesorDTO();
         if(asesor == null){
             return ResponseEntity.badRequest().build();
         }
+        System.out.println("existe un asesor");
         asesorIdentificado = asesorService.consultarAsesor(asesor);
         if(asesorIdentificado != null){
+            System.out.println("lo consulte y existe el asesor");
             siguiente = colaService.siguiente();
             if(siguiente == null){
-                colaService.listaCola();
+                System.out.println("no existe una lista de turnos asi que la creare");
+                colaService.crearCola();
                 siguiente = colaService.siguiente();
             }
             if(siguiente!=null){
+                System.out.println("Tenemos un turno para trabajar");
                 secuencia = siguiente.getTurno();
                 turno = turnoService.consultarTurno(secuencia);
                 if(turno != null){
+                    System.out.println("compruebo mi turno para asignarlo a un asesor");
                     turnoAtendido = adminTurnosService.asignarAsesor(turno.getId(), asesor.getIdentificacion());
                     if(turnoAtendido!=null){
+                        System.out.println("esta asignado y listo para ser atendido");
                         turno = turnoService.cambiarEstadoLlamadoTurno(secuencia);
                         return ResponseEntity.ok(turno);
                     }

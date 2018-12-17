@@ -5,6 +5,7 @@
  */
 package jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service.impl;
 
+import java.util.Calendar;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service.FuncionesService;
 import org.springframework.stereotype.Service;
 
@@ -22,4 +23,16 @@ public class DefaultFuncionesService implements FuncionesService{
         }
         return true;
     }
+
+    @Override
+    public Calendar iniciarReloj() {
+        Calendar now = Calendar.getInstance();
+        now.set(Calendar.HOUR, 0);
+        now.set(Calendar.MINUTE, 0);
+        now.set(Calendar.SECOND, 0);
+        now.set(Calendar.HOUR_OF_DAY, 0);
+        return now;
+    }
+    
+    
 }

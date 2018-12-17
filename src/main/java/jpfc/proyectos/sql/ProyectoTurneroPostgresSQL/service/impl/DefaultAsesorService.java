@@ -36,22 +36,17 @@ public class DefaultAsesorService implements AsesorService{
     public AsesorDTO crearAsesor(String identificacion , String nombre) {
         Asesor asesor = new Asesor();
         Optional<Asesor> resultado = null;
-        System.out.println("1!!!");
         if(funcionesService.esValido(identificacion) && funcionesService.esValido(nombre)){
             asesor.setIdentificacion(identificacion);
             asesor.setNombre(nombre);
             resultado = asesorRepository.findById(identificacion);
-            System.out.println("2!!!");
             if(!resultado.isPresent()){
                 asesor = asesorRepository.save(asesor);
-                System.out.println("3!!!");
                 if(asesor.getIdentificacion().matches(identificacion)){
-                    System.out.println("4!!!");
                     return modelMapper.map(asesor, AsesorDTO.class);
                 }
             }
         }
-        System.out.println("5!!!");
         return null;
     }
 

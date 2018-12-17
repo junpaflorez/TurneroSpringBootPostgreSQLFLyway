@@ -54,19 +54,19 @@ public class DefaultAsesorServiceTest {
     }
     
     @Test
-    public void crearAsesor_IdentificacionNotEmpty_NombreNotEmpty(){
+    public void crearAsesor_IdentificacionNotEmpty_NombreNotEmpty_AsesorNotInBD(){
         AsesorDTO result = null;
-        String identificacion = "02";
-        String nombre = "CARLOS";
+        result = crearAsesorDTO();
         Asesor asesor = crearAsesor();
-        AsesorDTO asesorDTO = crearAsesorDTO();
+        String identificacion = asesor.getIdentificacion();
+        String nombre = asesor.getNombre();
         Optional<Asesor> asesorOptional = Optional.empty();
-        //Optional<Asesor> asesorOptional = Optional.of(crearAsesor());
         
         when(funcionesService.esValido(identificacion)).thenReturn(Boolean.TRUE);
         when(funcionesService.esValido(nombre)).thenReturn(Boolean.TRUE);
         when(asesorRepository.findById(identificacion)).thenReturn(asesorOptional);
         when(asesorRepository.save(asesor)).thenReturn(asesor);
+        when(modelMapper.map(asesor, AsesorDTO.class)).thenReturn(result);
         
         result = asesorService.crearAsesor(identificacion, nombre);
         
@@ -74,7 +74,7 @@ public class DefaultAsesorServiceTest {
     }
     
     @Test
-    public void crearAsesor_IdentificacionNotEmpty_NombreNotEmpty_AlredyBD(){
+    public void crearAsesor_IdentificacionNotEmpty_NombreNotEmpty_AsesorAlredyBD(){
         AsesorDTO result = null;
         String identificacion = "02";
         String nombre = "CARLOS";
@@ -83,13 +83,9 @@ public class DefaultAsesorServiceTest {
         //Optional<Asesor> asesorOptional = Optional.empty();
         Optional<Asesor> asesorOptional = Optional.of(asesor);
         
-        System.out.println("Sta Mierda esta sospechosa: " + asesorOptional.isPresent());
-        
         when(funcionesService.esValido(identificacion)).thenReturn(Boolean.TRUE);
         when(funcionesService.esValido(nombre)).thenReturn(Boolean.TRUE);
         when(asesorRepository.findById(identificacion)).thenReturn(asesorOptional);
-        when(asesorRepository.save(asesor)).thenReturn(asesor);
-        when(modelMapper.map(asesor, AsesorDTO.class)).thenReturn(asesorDTO);
         
         result = asesorService.crearAsesor(identificacion, nombre);
         
@@ -106,7 +102,6 @@ public class DefaultAsesorServiceTest {
         //Optional<Asesor> asesorOptional = Optional.empty();
         Optional<Asesor> asesorOptional = Optional.of(asesor);
         
-        System.out.println("Sta Mierda esta sospechosa: " + asesorOptional.isPresent());
         
         when(funcionesService.esValido(identificacion)).thenReturn(Boolean.TRUE);
         when(funcionesService.esValido(nombre)).thenReturn(Boolean.TRUE);
@@ -118,6 +113,66 @@ public class DefaultAsesorServiceTest {
         assertEquals(null, result);
     }
     
+    
+    @Test
+    public void consultarAsesor_IdentificacionNotValid_NombreNotValid(){
+        AsesorDTO asesorDTO = crearAsesorDTO();
+        AsesorDTO result = new AsesorDTO();
+        String identificacion = asesorDTO.getIdentificacion();
+        String nombre = asesorDTO.getNombre();
+        when(funcionesService.esValido(identificacion)).thenReturn(Boolean.FALSE);
+        when(funcionesService.esValido(nombre)).thenReturn(Boolean.FALSE);
+        
+        result = asesorService.consultarAsesor(asesorDTO);
+        
+        assertEquals(null, result);
+        
+    }
+    
+    
+    @Test
+    public void consultarAsesor_IdentificacionValid_NombreValid_AsosorNotInBD(){
+        AsesorDTO asesorDTO = crearAsesorDTO();
+        AsesorDTO result = new AsesorDTO();
+        String identificacion = asesorDTO.getIdentificacion();
+        String nombre = asesorDTO.getNombre();
+        Optional<Asesor> asesorOptional = Optional.empty();
+        
+        
+        
+        when(funcionesService.esValido(identificacion)).thenReturn(Boolean.TRUE);
+        when(funcionesService.esValido(nombre)).thenReturn(Boolean.TRUE);
+        when(asesorRepository.findById(identificacion)).thenReturn(asesorOptional);
+        
+        result = asesorService.consultarAsesor(asesorDTO);
+        
+        assertEquals(null, result);
+        
+    }
+    
+    
+    @Test
+    public void consultarAsesor_IdentificacionValid_NombreValid_AsosorInBD(){
+        AsesorDTO asesorDTO = crearAsesorDTO();
+        AsesorDTO result = new AsesorDTO();
+        String identificacion = asesorDTO.getIdentificacion();
+        String nombre = asesorDTO.getNombre();
+        Asesor asesor = crearAsesor();
+        Optional<Asesor> asesorOptional = Optional.of(asesor);
+        
+        
+        
+        when(funcionesService.esValido(identificacion)).thenReturn(Boolean.TRUE);
+        when(funcionesService.esValido(nombre)).thenReturn(Boolean.TRUE);
+        when(asesorRepository.findById(identificacion)).thenReturn(asesorOptional);
+        when(modelMapper.map(asesor, AsesorDTO.class)).thenReturn(asesorDTO);
+        
+        result = asesorService.consultarAsesor(asesorDTO);
+        
+        assertEquals(identificacion, result.getIdentificacion());
+        
+    }
+     
     
     public AsesorDTO crearAsesorDTO(){
         AsesorDTO asesor = new AsesorDTO();

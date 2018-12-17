@@ -18,7 +18,7 @@ public class DefaultFuncionesService implements FuncionesService{
         
     @Override
     public boolean esValido(String cadena){
-        if(cadena.isEmpty() || cadena == ""){
+        if(cadena!=null || cadena == ""){
             return false;
         }
         return true;

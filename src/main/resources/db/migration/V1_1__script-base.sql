@@ -25,7 +25,7 @@ CREATE TABLE Atendido (
 
 CREATE TABLE Cola (
     id BIGSERIAL NOT NULL PRIMARY KEY,
-    turno INT NOT NULL,
+    turno INT NOT NULL UNIQUE,
     asesor VARCHAR(5) NULL
 );
 

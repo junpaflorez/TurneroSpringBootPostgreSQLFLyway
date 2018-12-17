@@ -57,18 +57,6 @@ public class AdminTurnosController {
         return ResponseEntity.badRequest().build();
     }
     
-    @GetMapping("/consultarTurno")
-    public ResponseEntity<?> consultarTurno(@RequestParam("turno") String turno){
-        AtendidoDTO atendidoDTO = new AtendidoDTO();
-        if(funcionesService.esValido(turno)){
-            int fkTurno = Integer.parseInt(turno);
-            atendidoDTO = adminTurnosService.consultarTurnoAtendido(fkTurno);
-            if(atendidoDTO!=null)
-                return ResponseEntity.ok(atendidoDTO);
-        }
-        return ResponseEntity.badRequest().build();
-    }
-    
     @GetMapping("/promedioAsesor")
     public ResponseEntity<?> promedioAsesor(@RequestBody AsesorDTO asesor){
         Time tiempoPromedio = new Time(0);

@@ -7,7 +7,10 @@ package jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.entity;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,7 +23,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Cola implements Serializable{
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "cola_id_seq")
+    @SequenceGenerator(name = "auto_gen", sequenceName = "cola_id_seq")
     private int id;
+    
     private int turno;
     private String asesor;
 }

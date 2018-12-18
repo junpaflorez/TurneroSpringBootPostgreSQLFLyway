@@ -21,6 +21,7 @@ import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service.FuncionesService;
 import jpfc.proyectos.sql.ProyectoTurneroPostgresSQL.service.TurnoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  *
  * @author junpa
  */
+@CrossOrigin(origins = "http://localhost:4200")
 @Controller
 @RequestMapping("api/v1/adminTurnos")
 public class AdminTurnosController {

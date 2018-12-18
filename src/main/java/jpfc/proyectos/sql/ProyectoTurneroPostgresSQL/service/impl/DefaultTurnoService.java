@@ -86,9 +86,9 @@ public class DefaultTurnoService implements TurnoService{
             turno = resultado.get();
             turno.setLlamado(true);
             auxiliar = turnoRepository.save(turno);
+            if(auxiliar.getId() == id){
+                return modelMapper.map(auxiliar, TurnoDTO.class);
             }
-        if(auxiliar.getId() == id){
-            return modelMapper.map(auxiliar, TurnoDTO.class);
         }
         return null;
     }
@@ -103,9 +103,9 @@ public class DefaultTurnoService implements TurnoService{
             turno = resultado.get();
             turno.setAtendido(true);
             auxiliar = turnoRepository.save(turno);
+            if(auxiliar.getId() == id){
+                return modelMapper.map(auxiliar, TurnoDTO.class);
             }
-        if(auxiliar.getId() == id){
-            return modelMapper.map(auxiliar, TurnoDTO.class);
         }
         return null;
     }

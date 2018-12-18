@@ -61,7 +61,7 @@ public class DefaultAdminTurnosService implements AdminTurnosService{
     public AtendidoDTO consultarTurnoAtendido(int id) {
         Atendido turno = new Atendido();
         Optional<Atendido> auxiliar = null;
-        if(id>0){
+        if(id >= 0){
             auxiliar = atendidoRepository.findById(id);
             if(auxiliar.isPresent()){
                 turno = auxiliar.get();

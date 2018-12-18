@@ -34,12 +34,8 @@ public class DefaultAsesorServiceTest {
     
     @InjectMocks
     private DefaultAsesorService asesorService;
-     
-    /*@Before
-    public void setUp() {
-        funcionesService = Mockito.mock(FuncionesService.class);
-        asesorRepository = Mockito.mock(AsesorRepository.class);        
-    }*/
+
+    
     @Test
     public void crearAsesor_IdentificacionEmpty_NombreEmpty(){
         AsesorDTO result = null;

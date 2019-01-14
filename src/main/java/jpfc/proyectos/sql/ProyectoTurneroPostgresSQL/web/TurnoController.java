@@ -38,7 +38,9 @@ public class TurnoController {
     @PostMapping("/crearTurno")
     public ResponseEntity<?> crearTurno(@RequestParam("categoria") String categoria){
         TurnoDTO turnoDTO = new TurnoDTO();
+        System.out.println("categoria:" + categoria);
         if(funcionesService.esValido(categoria)){
+            System.out.println("es valido");
             turnoDTO = turnoService.crearTurno(categoria);
             if(turnoDTO != null){
                 return ResponseEntity.ok(turnoDTO);
